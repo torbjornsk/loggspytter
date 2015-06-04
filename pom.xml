@@ -25,51 +25,62 @@
   </repositories>
 
   <build>
-  <plugins>
-    <plugin>
-      <groupId>com.spotify</groupId>
-      <artifactId>docker-maven-plugin</artifactId>
-      <version>0.2.6</version>
-      <configuration>
-        <imageName>loggspytter</imageName>
-        <baseImage>java</baseImage>
-        <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
-        <!-- copy the service's jar file from target into the root directory of the image -->
-        <resources>
-           <resource>
-             <targetPath>.</targetPath>
-             <directory>${project.build.directory}</directory>
-             <include>${project.build.finalName}.jar</include>
-           </resource>
-        </resources>
-      </configuration>
-    </plugin>
-    <plugin>
-      <artifactId>maven-assembly-plugin</artifactId>
-      <executions>
-        <execution>
-          <phase>install</phase>
-          <goals>
-            <goal>single</goal>
-          </goals>
-        </execution>
-      </executions>
-      <configuration>
+    <plugins>
+      <plugin>
+        <!-- kompiler som java 1.7 kode -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.0</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.spotify</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>0.2.6</version>
+        <configuration>
+          <imageName>loggspytter</imageName>
+          <baseImage>java</baseImage>
+          <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
+          <!-- copy the service's jar file from target into the root directory of the image -->
+          <resources>
+            <resource>
+              <targetPath>.</targetPath>
+              <directory>${project.build.directory}</directory>
+              <include>${project.build.finalName}.jar</include>
+            </resource>
+          </resources>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>install</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
 
-        <archive>
-          <manifest>
-            <addClasspath>true</addClasspath>
-            <mainClass>no.mesan.torbjornk.loggspytter.Loggspytter</mainClass>
-          </manifest>
-        </archive>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <mainClass>no.mesan.torbjornk.loggspytter.Loggspytter</mainClass>
+            </manifest>
+          </archive>
 
-        <descriptorRefs>
-          <descriptorRef>jar-with-dependencies</descriptorRef>
-        </descriptorRefs>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
 
-      </configuration>
-    </plugin>
-  </plugins>
-</build>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
